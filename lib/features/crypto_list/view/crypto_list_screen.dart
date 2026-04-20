@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crypto_coins_list/features/crypto_list/bloc/crypto_list_bloc.dart';
 import 'package:crypto_coins_list/features/crypto_list/widgets/widgets.dart';
 import 'package:crypto_coins_list/repositories/crypto_coins/crypto_coins.dart';
@@ -35,44 +37,61 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
 
         title: Text(widget.title),
       ),
-      body: BlocBuilder<CryptoListBloc, CryptoListBlocState>(
-        bloc: _cryptoListBloc,
-        builder: (context, state) {
-          if (state is CryptoListBlocLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is CryptoListBlocLoaded) {
-            final cryptoCoinsList = state.cryptoCoinsList;
-            return ListView.separated(
-              itemCount: cryptoCoinsList.length,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, index) {
-                return CryptoCoinTile(coin: cryptoCoinsList[index]);
-              },
-            );
-          } else if (state is CryptoListBlocError) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Something went wrong while fetching crypto coins.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  Text(
-                    'Please try again later.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Container();
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final completer = Completer<void>();
+          _cryptoListBloc.add(LoadCryptoCoinsEvent(completer: completer));
+          return completer.future;
         },
+        child: BlocBuilder<CryptoListBloc, CryptoListBlocState>(
+          bloc: _cryptoListBloc,
+          builder: (context, state) {
+            if (state is CryptoListBlocLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is CryptoListBlocLoaded) {
+              final cryptoCoinsList = state.cryptoCoinsList;
+              return ListView.separated(
+                itemCount: cryptoCoinsList.length,
+                separatorBuilder: (context, index) => const Divider(),
+                itemBuilder: (context, index) {
+                  return CryptoCoinTile(coin: cryptoCoinsList[index]);
+                },
+              );
+            } else if (state is CryptoListBlocError) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Something went wrong...',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    Text(
+                      'Please try again later.',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _cryptoListBloc.add(LoadCryptoCoinsEvent());
+                      },
+                      child: const Text('Try Again'),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
       /* (_cryptoCoinsList == null)
           ? const Center(child: CircularProgressIndicator())
