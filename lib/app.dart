@@ -1,5 +1,5 @@
 import 'package:crypto_coins_list/router/router.dart';
-import 'package:crypto_coins_list/theme/theme.dart';
+import 'package:crypto_coins_list/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
