@@ -1,10 +1,14 @@
-import 'package:crypto_coins_list/repositories/crypto_coins/models/crypto_coin.dart';
+import 'package:crypto_coins_list/repositories/crypto_coins/crypto_coins.dart';
 import 'package:dio/dio.dart';
 
-class CryptoCoinsRepository {
+class CryptoCoinsRepository implements AbstractCoinsRepository {
+  CryptoCoinsRepository({required this.dio});
+  final Dio dio;
+
+  @override
   Future<List<CryptoCoin>> fetchCryptoCoins() async {
     // CoinGecko returns a lot of data, but we only need the name and price for our app
-    final response = await Dio().get(
+    final response = await dio.get(
       'https://api.coingecko.com/api/v3/coins/markets',
       queryParameters: {'vs_currency': 'usd', 'ids': 'bitcoin,ethereum,solana'},
     );

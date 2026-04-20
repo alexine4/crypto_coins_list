@@ -1,7 +1,10 @@
+import 'package:crypto_coins_list/features/crypto_list/bloc/crypto_list_bloc.dart';
 import 'package:crypto_coins_list/features/crypto_list/widgets/widgets.dart';
-import 'package:crypto_coins_list/repositories/crypto_coins/crypto_coins_repository.dart';
-import 'package:crypto_coins_list/repositories/crypto_coins/models/crypto_coin.dart';
+import 'package:crypto_coins_list/repositories/crypto_coins/crypto_coins.dart';
+import 'package:crypto_coins_list/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class CryptoListScreen extends StatefulWidget {
   const CryptoListScreen({super.key, required this.title});
@@ -13,23 +16,13 @@ class CryptoListScreen extends StatefulWidget {
 }
 
 class _CryptoListScreenState extends State<CryptoListScreen> {
-  List<CryptoCoin>? _cryptoCoinsList;
+  final _cryptoListBloc = CryptoListBloc(
+    coinsRepository: GetIt.I<AbstractCoinsRepository>(),
+  );
 
   @override
   void initState() {
-    CryptoCoinsRepository()
-        .fetchCryptoCoins()
-        .then((coins) {
-          setState(() {
-            _cryptoCoinsList = coins;
-          });
-          // Handle the fetched coins here, e.g., update the state to display them
-          print(coins);
-        })
-        .catchError((error) {
-          // Handle any errors that occur during the fetch
-          print('Error fetching crypto coins: $error');
-        });
+    _cryptoListBloc.add(LoadCryptoCoinsEvent());
     super.initState();
   }
 
@@ -42,7 +35,46 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
 
         title: Text(widget.title),
       ),
-      body: (_cryptoCoinsList == null)
+      body: BlocBuilder<CryptoListBloc, CryptoListBlocState>(
+        bloc: _cryptoListBloc,
+        builder: (context, state) {
+          if (state is CryptoListBlocLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CryptoListBlocLoaded) {
+            final cryptoCoinsList = state.cryptoCoinsList;
+            return ListView.separated(
+              itemCount: cryptoCoinsList.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                return CryptoCoinTile(coin: cryptoCoinsList[index]);
+              },
+            );
+          } else if (state is CryptoListBlocError) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Something went wrong while fetching crypto coins.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  Text(
+                    'Please try again later.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Container();
+          }
+        },
+      ),
+      /* (_cryptoCoinsList == null)
           ? const Center(child: CircularProgressIndicator())
           : ListView.separated(
               itemCount: _cryptoCoinsList?.length ?? 0,
@@ -50,7 +82,7 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
               itemBuilder: (context, index) {
                 return CryptoCoinTile(coin: _cryptoCoinsList![index]);
               },
-            ),
+            ), */
     );
   }
 }
