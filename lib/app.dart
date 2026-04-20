@@ -1,6 +1,8 @@
 import 'package:crypto_coins_list/router/router.dart';
 import 'package:crypto_coins_list/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,6 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Crypto Tracker',
       theme: lightTheme,
       routes: routes,
+      navigatorObservers: [TalkerRouteObserver(GetIt.I<Talker>())],
     );
   }
 }

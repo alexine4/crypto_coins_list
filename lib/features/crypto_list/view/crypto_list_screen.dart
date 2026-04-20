@@ -8,6 +8,7 @@ import 'package:crypto_coins_list/shared/widgets/error_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class CryptoListScreen extends StatefulWidget {
   const CryptoListScreen({super.key, required this.title});
@@ -39,10 +40,21 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
+        centerTitle: true,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => TalkerScreen(talker: GetIt.I<Talker>()),
+                ),
+              );
+            },
+            icon: Icon(Icons.settings),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
