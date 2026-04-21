@@ -64,9 +64,7 @@ class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
             } else if (state is CryptoCoinLoaded) {
               final details = state.cryptoCoinsDetails.first;
               return ListView(
-                children: [
-                  Center(child: CryptoCoinDetailsTile(coinDetails: details)),
-                ],
+                children: [Center(child: CryptoCoinDetailsTile(coin: details))],
               );
             } else if (state is CryptoCoinError) {
               return ErrorStateWidget(

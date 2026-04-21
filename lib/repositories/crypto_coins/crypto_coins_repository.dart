@@ -16,8 +16,10 @@ class CryptoCoinsRepository implements AbstractCoinsRepository {
       return CryptoCoin(
         id: coin['id'] as String? ?? '',
         name: (coin['symbol'] as String?)?.toUpperCase() ?? '',
-        price: (coin['current_price'] as num?)?.toDouble() ?? 0,
-        logoUrl: coin['image'] as String? ?? '',
+        currentPrice: (coin['current_price'] as num?)?.toDouble() ?? 0,
+        image: coin['image'] as String? ?? '',
+        high24h: (coin['high_24h'] as num?)?.toDouble() ?? 0,
+        low24h: (coin['low_24h'] as num?)?.toDouble() ?? 0,
       );
     }).toList();
     return coins;
@@ -42,10 +44,9 @@ class CryptoCoinsRepository implements AbstractCoinsRepository {
       name: (coin['symbol'] as String?)?.toUpperCase() ?? '',
       actualPrice:
           (marketData?['current_price']?['usd'] as num?)?.toDouble() ?? 0,
+      image: CryptoCoinDetails.parseImage(coin['image']),
       maxPriceBy24h: (marketData?['high_24h']?['usd'] as num?)?.toDouble() ?? 0,
       minPriceBy24h: (marketData?['low_24h']?['usd'] as num?)?.toDouble() ?? 0,
-      logoUrl:
-          (coin['image'] as Map<String, dynamic>?)?['large'] as String? ?? '',
     );
   }
 }

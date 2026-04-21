@@ -9,9 +9,9 @@ class CryptoCoinTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.network(coin.logoUrl, width: 32, height: 32),
+      leading: Image.network(coin.image, width: 32, height: 32),
       title: Text(coin.name),
-      subtitle: Text('Price: \$${coin.price}'),
+      subtitle: Text('Price: \$${coin.currentPrice}'),
       trailing: Icon(Icons.arrow_forward_ios),
       onTap: () => Navigator.pushNamed(
         context,

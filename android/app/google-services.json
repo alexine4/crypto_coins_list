@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "170362111809",
+    "project_id": "crypto-dreamer-1d54f",
+    "storage_bucket": "crypto-dreamer-1d54f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170362111809:android:432534923ca3743f4e03c0",
+        "android_client_info": {
+          "package_name": "com.cryptoguys.crypto_coins_list"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgmqAHNtheTRiBs4O3JNiAld1a3dAmXPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:crypto_coins_list/features/crypto_list/bloc/crypto_list_bloc.dart';
 import 'package:crypto_coins_list/features/crypto_list/widgets/widgets.dart';
 import 'package:crypto_coins_list/repositories/crypto_coins/crypto_coins.dart';
-import 'package:crypto_coins_list/shared/theme/theme.dart';
 import 'package:crypto_coins_list/shared/widgets/error_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
